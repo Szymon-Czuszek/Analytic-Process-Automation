@@ -1,3 +1,6 @@
+# Project specific
+DJANGO/MyStocks/DataSets/
+
 # Added to the template manually by me (for macOS)
 .DS_Store
 
