@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<ul>
+    <h1>{{ dataset }}</h1>
+    
+    <ul>
+        <li>
+            <a href="/Analyzer/update_dataset/{{ dataset.id }}">Update Information</a>
+        </li>
+        <li>
+            <a href="/Analyzer/delete_dataset/{{ dataset.id }}">Delete this Data Set</a>
+        </li>
+    </ul>
+</ul>
+
+{% endblock %}

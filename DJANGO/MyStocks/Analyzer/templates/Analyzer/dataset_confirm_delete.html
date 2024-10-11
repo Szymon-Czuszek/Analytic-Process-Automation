@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<ul>
+    <h1>Delete this DataSet?</h1>
+    <h2>{{ dataset}}</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" value="Submit">
+    </form>
+</ul>
+
+{% endblock %}

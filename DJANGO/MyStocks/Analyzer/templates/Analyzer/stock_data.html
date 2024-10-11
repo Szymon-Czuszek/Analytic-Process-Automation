@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Download Stock Data</h2>
+
+    {% if error %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="ticker" class="form-label">Stock Ticker</label>
+            {{ form.ticker }}
+        </div>
+        <div class="mb-3">
+            <label for="start_date" class="form-label">Start Date</label>
+            {{ form.start_date }}
+        </div>
+        <button type="submit" class="btn btn-primary">Download</button>
+    </form>
+
+    {% if data_set %}
+        <h3 class="mt-4">Data Downloaded Successfully!</h3>
+        <p><strong>Ticker:</strong> {{ data_set.ticker }}</p>
+        <p><strong>Start Date:</strong> {{ data_set.start_date }}</p>
+        <p><strong>End Date:</strong> {{ data_set.end_date }}</p>
+        <a href="{% url 'Analyzer:download_file' data_set.filename %}" class="btn btn-success">Download CSV</a>
+    {% endif %}
+</div>
+{% endblock %}
