@@ -13,5 +13,6 @@ urlpatterns = [
     path("update_dataset/<int:pk>", views.DataSetUpdateView.as_view(), name = "update_dataset"),
     path("delete_dataset/<int:pk>", views.DataSetDeleteView.as_view(), name = "delete_dataset"),
     path("signup/", views.SignUpView.as_view(), name = "signup"),
-    path("profile/", views.profile, name = "profile")
+    path("profile/", views.profile, name = "profile"),
+    path('add-sas-account/', views.AddSASAccountView.as_view(), name='add_sas_account'),
 ] # Path expects a class!

@@ -102,3 +102,31 @@ class SignUpView(CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy("login")
     template_name = "Analyzer/signup.html"
+
+# views.py for Analyzer app
+from django.shortcuts import render, redirect
+from django.views import View
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+import keyring
+from .forms import SASAccountForm
+
+@method_decorator(login_required, name='dispatch')
+class AddSASAccountView(View):
+    def get(self, request):
+        form = SASAccountForm()
+        return render(request, 'Analyzer/add_sas_account.html', {'form': form})
+
+    def post(self, request):
+        form = SASAccountForm(request.POST)
+        if form.is_valid():
+            sas_username = form.cleaned_data['sas_username']
+            sas_email = form.cleaned_data['sas_email']
+            sas_password = form.cleaned_data['sas_password']
+            service_id = "SAS"
+
+            # Save the SAS account to keyring using the entered email and username
+            keyring.set_password(service_id, f"{sas_username}-{sas_email}", sas_password)
+
+            return redirect('Analyzer:index')  # Redirect after successful form submission
+        return render(request, 'Analyzer/add_sas_account.html', {'form': form})

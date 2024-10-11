@@ -1,0 +1,15 @@
+<!-- templates/Analyzer/add_sas_account.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+
+<ul>
+  <h2>Add SAS Account</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Account</button>
+  </form>
+</ul>
+
+{% endblock %}
