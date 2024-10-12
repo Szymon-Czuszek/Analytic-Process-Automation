@@ -1,0 +1,17 @@
+<!-- templates/Analyzer/sas_account_list.html -->
+{% extends "base.html" %}
+
+{% block content %}
+
+<ul>
+    <h2>Your SAS Accounts</h2>
+    <ul>
+        {% for account in sas_accounts %}
+            <li>Username: {{ account.username }}, Email: {{ account.email }}</li>
+        {% empty %}
+            <li>No SAS accounts registered yet.</li>
+        {% endfor %}
+    </ul>
+</ul>
+
+{% endblock %}

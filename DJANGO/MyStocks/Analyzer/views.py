@@ -12,6 +12,19 @@ import yfinance as yf
 from datetime import datetime
 from django.http import FileResponse
 import os
+from django.shortcuts import render
+from .models import SASAccount
+# views.py for Analyzer app
+from django.shortcuts import render, redirect
+from django.views import View
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+import keyring
+from .forms import SASAccountForm
+# views.py
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from .models import SASAccount
 
 import logging
 logger = logging.getLogger(__name__)
@@ -103,14 +116,6 @@ class SignUpView(CreateView):
     success_url = reverse_lazy("login")
     template_name = "Analyzer/signup.html"
 
-# views.py for Analyzer app
-from django.shortcuts import render, redirect
-from django.views import View
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-import keyring
-from .forms import SASAccountForm
-
 @method_decorator(login_required, name='dispatch')
 class AddSASAccountView(View):
     def get(self, request):
@@ -130,3 +135,8 @@ class AddSASAccountView(View):
 
             return redirect('Analyzer:index')  # Redirect after successful form submission
         return render(request, 'Analyzer/add_sas_account.html', {'form': form})
+
+@login_required
+def sas_account_list_view(request):
+    sas_accounts = SASAccount.objects.filter(user=request.user)
+    return render(request, 'Analyzer/sas_account_list.html', {'sas_accounts': sas_accounts})
