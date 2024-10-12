@@ -3,5 +3,31 @@
 {% block content %}
 <ul>
     <h2>Home Page</h2>
+
+    {% if user.is_authenticated %}
+        <p> You are Logged In</p>
+        <p> Welcome: {{ user.get_username }}</p>
+        
+        <!-- Logout form with POST method -->
+        <form method="post" action="{% url 'logout' %}?next={{ request.path }}">
+            {% csrf_token %}
+            <button type="submit">LOGOUT HERE</button>
+        </form>
+        
+    {% else %}
+
+        <p> You are not logged in </p>
+        <ul>
+            <li>
+                <a href="{% url 'login' %}?next={{ request.path }}">LOGIN</a>
+            </li>
+            <li>
+                <a href="{% url 'Analyzer:signup' %}">SIGNUP</a>
+            </li>
+        </ul>
+
+    {% endif %}
+
 </ul>
+
 {% endblock %}
