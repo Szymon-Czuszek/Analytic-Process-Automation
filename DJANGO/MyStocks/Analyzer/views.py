@@ -131,7 +131,15 @@ class AddSASAccountView(View):
             service_id = "SAS"
 
             # Save the SAS account to keyring using the entered email and username
-            keyring.set_password(service_id, f"{sas_username}-{sas_email}", sas_password)
+            keyring.set_password(service_id, sas_email, sas_password)
+
+            # Create a new SASAccount instance and save it to the database
+            sas_account = SASAccount(
+                user=request.user,  # Link to the logged-in user
+                username=sas_username,
+                email=sas_email
+            )
+            sas_account.save()  # Save the SAS account to the database
 
             return redirect('Analyzer:index')  # Redirect after successful form submission
         return render(request, 'Analyzer/add_sas_account.html', {'form': form})
