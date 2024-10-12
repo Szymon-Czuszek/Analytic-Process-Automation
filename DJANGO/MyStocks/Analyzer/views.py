@@ -1,36 +1,24 @@
-from django.db.models.query import QuerySet
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseNotFound
-from .forms import StockDataForm
-from .models import DataSet
-from django.views.generic import TemplateView, FormView, CreateView, ListView, DetailView, UpdateView, DeleteView
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.forms import UserCreationForm
-from django.urls import reverse_lazy, reverse
-import yfinance as yf
+from .forms import StockDataForm, SASAccountForm
+from .models import DataSet, SASAccount
 from datetime import datetime
-from django.http import FileResponse
-import os
-from django.shortcuts import render
-from .models import SASAccount
-# views.py for Analyzer app
-from django.shortcuts import render, redirect
-from django.views import View
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models.query import QuerySet
+from django.http import FileResponse, HttpResponseNotFound, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
+from django.views import View
+from django.views.generic import TemplateView, FormView, CreateView, ListView, DetailView, UpdateView, DeleteView
 import keyring
-from .forms import SASAccountForm
-# views.py
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from .models import SASAccount
-
 import logging
-logger = logging.getLogger(__name__)
+import os
+import yfinance as yf
 
-from django.conf import settings  # Import settings this way
-BASE_DIR = settings.BASE_DIR  # Access BASE_DIR from settings
+logger = logging.getLogger(__name__)
+BASE_DIR = settings.BASE_DIR # Access BASE_DIR from settings
 
 # Create your views here.
 def index(request):
