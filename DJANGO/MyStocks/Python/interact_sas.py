@@ -8,6 +8,29 @@ from selenium.webdriver.support.ui import WebDriverWait
 import keyring
 import pyautogui
 import time
+import os
+
+def load_sas_file(file_path):
+    """
+    Opens a .sas file and loads its contents into a string variable.
+    
+    :param file_path: The path to the .sas file.
+    :return: The contents of the .sas file as a string.
+    """
+    try:
+        with open(file_path, 'r') as file:
+            sas_code = file.read()
+        return sas_code
+    except FileNotFoundError:
+        print(f"File not found: {file_path}")
+        return None
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
+
+# Example usage:
+# sas_code = load_sas_file('path/to/your/file.sas')
+# print(sas_code)
 
 def run_sas_code(user_email, filename, sas_code):
     # The service is just a namespace for your app
@@ -147,10 +170,19 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run SAS code using Selenium.')
     parser.add_argument('email', help='Your SAS email.')
     parser.add_argument('filename', help='Name of the file to work with.')
-    parser.add_argument('sas_code', help='SAS code to run.')
+    parser.add_argument('sas_code', help='Path to a .sas file or the SAS code itself.')
 
     # Parse the arguments
     args = parser.parse_args()
 
-    # Call the function with the provided arguments
-    run_sas_code(args.email, args.filename, args.sas_code)
+    # Check if the sas_code argument is a file
+    if args.sas_code.endswith(".sas") and os.path.isfile(args.sas_code):
+        sas_code = load_sas_file(args.sas_code)
+        if sas_code is None:
+            print("Error loading SAS code from file.")
+        else:
+            # Call the function with the file contents as SAS code
+            run_sas_code(args.email, args.filename, sas_code)
+    else:
+        # Call the function assuming the code is directly provided
+        run_sas_code(args.email, args.filename, args.sas_code)
