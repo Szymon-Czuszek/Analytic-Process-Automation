@@ -127,7 +127,17 @@ def run_sas_code(user_email, filename, sas_code):
         )
         files_upload_element.click()
 
+        # Press Tab to navigate to the next focusable element (this may depend on the page structure)
+        actions.send_keys(Keys.TAB).perform()
+
+        # Wait a moment to ensure the focus change
+        time.sleep(5)
+
+        # Press Enter to activate the focused element (which should be the "Deploy" button)
+        actions.send_keys(Keys.ENTER).perform()
+
         # Interactions using pyautogui
+        time.sleep(5)
         pyautogui.press('tab')
         time.sleep(5)
         pyautogui.typewrite(filename)
@@ -140,6 +150,8 @@ def run_sas_code(user_email, filename, sas_code):
         time.sleep(5)
         pyautogui.press('enter')
         time.sleep(5)
+
+        # Press Enter to activate the focused element (which should be the "Deploy" button)
         actions.send_keys(Keys.ENTER).perform()
 
         # Click the format code and run buttons
