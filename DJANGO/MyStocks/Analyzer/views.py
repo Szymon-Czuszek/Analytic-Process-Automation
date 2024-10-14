@@ -52,10 +52,10 @@ def download_stock_data(ticker, start_date):
 
     # Save the dataset information in the database
     data_set = DataSet(
-        ticker=ticker,
-        start_date=start_date,
-        end_date=end_date,
-        filename=filename,
+        ticker = ticker,
+        start_date = start_date,
+        end_date = end_date,
+        filename = filename,
     )
     data_set.save()  # Save the record to the database
 
@@ -84,7 +84,7 @@ def stock_data_view(request):
 def download_file(request, filename):
     file_path = os.path.join(BASE_DIR, "DataSets", filename)
     if os.path.exists(file_path):
-        return FileResponse(open(file_path, 'rb'), as_attachment=True)
+        return FileResponse(open(file_path, 'rb'), as_attachment = True)
     else:
         return HttpResponseNotFound("File not found.")
 
@@ -125,7 +125,7 @@ class AddSASAccountView(View):
             # Create a new SASAccount instance and save it to the database
             sas_account = SASAccount(
                 user=request.user,  # Link to the logged-in user
-                username=sas_username,
+                username = sas_username,
                 email=sas_email
             )
             sas_account.save()  # Save the SAS account to the database
@@ -137,6 +137,11 @@ class AddSASAccountView(View):
 def sas_account_list_view(request):
     sas_accounts = SASAccount.objects.filter(user = request.user)
     return render(request, 'Analyzer/sas_account_list.html', {'sas_accounts': sas_accounts})
+        
+class SASAccountDetailView(DetailView):
+    model = SASAccount
+    template_name = 'Analyzer/sas_account_detail.html'
+    context_object_name = 'sas_account'
 
 class RunSASScriptView(View):
     template_name = 'Analyzer/run_sas_script.html'
@@ -145,19 +150,28 @@ class RunSASScriptView(View):
         # Get the SAS account for the given user (by primary key)
         sas_account = get_object_or_404(SASAccount, pk = pk)
 
-        return render(request, self.template_name, {'sas_account': sas_account})
+        # Get the list of .sas files from the SAS directory and its subfolders
+        sas_folder = os.path.join(BASE_DIR, "SAS")
+        sas_files = []
+        for root, dirs, files in os.walk(sas_folder):
+            for file in files:
+                if file.endswith(".sas"):
+                    relative_path = os.path.relpath(os.path.join(root, file), sas_folder)
+                    sas_files.append(relative_path)
+
+        return render(request, self.template_name, {'sas_account': sas_account, 'sas_files': sas_files})
 
     def post(self, request, pk):
         # Get the SAS account for the given user (by primary key)
         sas_account = get_object_or_404(SASAccount, pk = pk)
 
-        # Retrieve the filename and file path from the form input
+        # Get the selected filename from the dropdown
         filename = request.POST.get('filename')
-        file_path = request.POST.get('file_path')  # Full path to the .sas file
+        file_path = os.path.join(BASE_DIR, "SAS", filename)  # Full path to the selected .sas file
 
         # Build the command to run the script via subprocess
         command = [
-            'python', os.path.join(BASE_DIR, "Python", "interact_sas.py"),  # Full path to the script
+            'python', os.path.join(BASE_DIR, "Python", "interact_sas.py"),  # Full path to the Python script
             sas_account.email,  # First argument: SAS email
             filename,           # Second argument: Filename
             file_path           # Third argument: Path to the .sas file
@@ -175,8 +189,3 @@ class RunSASScriptView(View):
 
         except Exception as e:
             return HttpResponse(f"Failed to run the SAS script: {str(e)}", status = 500)
-        
-class SASAccountDetailView(DetailView):
-    model = SASAccount
-    template_name = 'Analyzer/sas_account_detail.html'
-    context_object_name = 'sas_account'
