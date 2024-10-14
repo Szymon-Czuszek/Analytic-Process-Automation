@@ -7,7 +7,7 @@
     <ul>
         {% for account in sas_accounts %}
             <li>
-                Username: {{ account.username }}, Email: {{ account.email }}
+                Username: <a href="{% url 'Analyzer:sas_account_detail' account.pk %}">{{ account.username }}</a>, Email: {{ account.email }}
             </li>
         {% empty %}
             <li>No SAS accounts registered yet.</li>

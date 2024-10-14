@@ -1,0 +1,15 @@
+<!-- templates/Analyzer/sas_account_detail.html -->
+{% extends "base.html" %}
+
+{% block content %}
+
+<ul>
+<h2>SAS Account Details</h2>
+<p>Username: {{ sas_account.username }}</p>
+<p>Email: {{ sas_account.email }}</p>
+
+<!-- Link to run the SAS script -->
+<a href="{% url 'Analyzer:run_sas_script' sas_account.pk %}">Run SAS Script for this Account</a>
+</ul>
+
+{% endblock %}

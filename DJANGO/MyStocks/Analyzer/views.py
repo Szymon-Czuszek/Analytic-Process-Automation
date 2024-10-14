@@ -139,7 +139,7 @@ def sas_account_list_view(request):
     return render(request, 'Analyzer/sas_account_list.html', {'sas_accounts': sas_accounts})
 
 class RunSASScriptView(View):
-    template_name = 'run_sas_script.html'
+    template_name = 'Analyzer/run_sas_script.html'
 
     def get(self, request, pk):
         # Get the SAS account for the given user (by primary key)
@@ -157,7 +157,7 @@ class RunSASScriptView(View):
 
         # Build the command to run the script via subprocess
         command = [
-            'python', '/path/to/your/sas_script.py',  # Full path to the script
+            'python', os.path.join(BASE_DIR, "Python", "interact_sas.py"),  # Full path to the script
             sas_account.email,  # First argument: SAS email
             filename,           # Second argument: Filename
             file_path           # Third argument: Path to the .sas file
@@ -175,3 +175,8 @@ class RunSASScriptView(View):
 
         except Exception as e:
             return HttpResponse(f"Failed to run the SAS script: {str(e)}", status = 500)
+        
+class SASAccountDetailView(DetailView):
+    model = SASAccount
+    template_name = 'Analyzer/sas_account_detail.html'
+    context_object_name = 'sas_account'

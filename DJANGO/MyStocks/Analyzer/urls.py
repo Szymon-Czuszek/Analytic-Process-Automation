@@ -16,4 +16,6 @@ urlpatterns = [
     path("profile/", views.profile, name = "profile"),
     path('add-sas-account/', views.AddSASAccountView.as_view(), name='add_sas_account'),
     path('sas-accounts/', views.sas_account_list_view, name='sas_account_list'),
+    path('sas-account/<int:pk>/', views.SASAccountDetailView.as_view(), name='sas_account_detail'),
+    path('run-sas-script/<int:pk>/', views.RunSASScriptView.as_view(), name='run_sas_script'),
 ] # Path expects a class!

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<ul>
+    <h1>Run SAS Script for {{ sas_account.username }}</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        <label for="filename">SAS Filename:</label>
+        <input type="text" id="filename" name="filename" required><br><br>
+
+        <label for="file_path">SAS File Path:</label>
+        <input type="text" id="file_path" name="file_path" required><br><br>
+
+        <button type="submit">Run Script</button>
+    </form>
+</ul>
+
+{% endblock %}
