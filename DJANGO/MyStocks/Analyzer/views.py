@@ -16,6 +16,7 @@ import keyring
 import logging
 import os
 import yfinance as yf
+import subprocess
 
 logger = logging.getLogger(__name__)
 BASE_DIR = settings.BASE_DIR # Access BASE_DIR from settings
@@ -134,5 +135,43 @@ class AddSASAccountView(View):
 
 @login_required
 def sas_account_list_view(request):
-    sas_accounts = SASAccount.objects.filter(user=request.user)
+    sas_accounts = SASAccount.objects.filter(user = request.user)
     return render(request, 'Analyzer/sas_account_list.html', {'sas_accounts': sas_accounts})
+
+class RunSASScriptView(View):
+    template_name = 'run_sas_script.html'
+
+    def get(self, request, pk):
+        # Get the SAS account for the given user (by primary key)
+        sas_account = get_object_or_404(SASAccount, pk = pk)
+
+        return render(request, self.template_name, {'sas_account': sas_account})
+
+    def post(self, request, pk):
+        # Get the SAS account for the given user (by primary key)
+        sas_account = get_object_or_404(SASAccount, pk = pk)
+
+        # Retrieve the filename and file path from the form input
+        filename = request.POST.get('filename')
+        file_path = request.POST.get('file_path')  # Full path to the .sas file
+
+        # Build the command to run the script via subprocess
+        command = [
+            'python', '/path/to/your/sas_script.py',  # Full path to the script
+            sas_account.email,  # First argument: SAS email
+            filename,           # Second argument: Filename
+            file_path           # Third argument: Path to the .sas file
+        ]
+
+        try:
+            # Run the command using subprocess
+            result = subprocess.run(command, capture_output = True, text = True)
+
+            # Check if the script was successful
+            if result.returncode == 0:
+                return HttpResponse(f"SAS script executed successfully. Output: {result.stdout}")
+            else:
+                return HttpResponse(f"An error occurred: {result.stderr}", status = 500)
+
+        except Exception as e:
+            return HttpResponse(f"Failed to run the SAS script: {str(e)}", status = 500)
