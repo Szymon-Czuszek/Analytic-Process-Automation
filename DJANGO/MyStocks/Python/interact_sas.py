@@ -24,7 +24,9 @@ def run_sas_script(user_email, filenames):
 
     start_time = time.time()
     driver = webdriver.Chrome()
-
+    
+    print(filenames)
+    
     try:
         driver.get("https://welcome.oda.sas.com/?event=logout&eventSource=eu-west-1a")
         driver.maximize_window()
@@ -88,6 +90,9 @@ def run_sas_script(user_email, filenames):
         
         for filename in filenames:
             
+            # Copy the filename to the clipboard
+            pyperclip.copy(filename)
+            
             time.sleep(5)
             
             # Refresh the page
@@ -100,9 +105,6 @@ def run_sas_script(user_email, filenames):
             )
             
             files_stock_element.click()
-            
-            # Copy the filename to the clipboard
-            pyperclip.copy(filename)
             
             files_upload_element = WebDriverWait(driver, 60).until(
                 EC.visibility_of_element_located((By.XPATH, "//span[contains(@class, 'sasUploadIcon')]"))
@@ -121,6 +123,10 @@ def run_sas_script(user_email, filenames):
             time.sleep(5)
             pyautogui.press('tab')
             time.sleep(5)
+            # Copy the filename to the clipboard
+            pyperclip.copy(filename)
+            time.sleep(5)
+            pyperclip.copy(filename)
             # Use hotkey to paste the clipboard contents
             pyautogui.hotkey(('command' if platform.system() == 'Darwin' else 'ctrl'), 'v')
             # pyautogui.typewrite(filename)
