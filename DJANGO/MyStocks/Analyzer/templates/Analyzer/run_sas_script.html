@@ -8,9 +8,9 @@
     <form method="post">
         {% csrf_token %}
         
-        <label for="filename">Select SAS File:</label>
-        <select id="filename" name="filename" required>
-            {% for file in sas_files %}
+        <label for="filenames">Select SAS or CSV Files:</label>
+        <select id="filenames" name="filenames" multiple required>
+            {% for file in all_files %}
                 <option value="{{ file }}">{{ file }}</option>
             {% endfor %}
         </select><br><br>

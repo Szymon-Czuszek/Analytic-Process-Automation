@@ -148,7 +148,7 @@ class RunSASScriptView(View):
 
     def get(self, request, pk):
         # Get the SAS account for the given user (by primary key)
-        sas_account = get_object_or_404(SASAccount, pk = pk)
+        sas_account = get_object_or_404(SASAccount, pk=pk)
 
         # Get the list of .sas files from the SAS directory and its subfolders
         sas_folder = os.path.join(BASE_DIR, "SAS")
@@ -159,33 +159,45 @@ class RunSASScriptView(View):
                     relative_path = os.path.relpath(os.path.join(root, file), sas_folder)
                     sas_files.append(relative_path)
 
-        return render(request, self.template_name, {'sas_account': sas_account, 'sas_files': sas_files})
+        # Get the list of .csv files from the DataSets folder
+        datasets_folder = os.path.join(BASE_DIR, "DataSets")
+        csv_files = []
+        for root, dirs, files in os.walk(datasets_folder):
+            for file in files:
+                if file.endswith(".csv"):
+                    relative_path = os.path.relpath(os.path.join(root, file), datasets_folder)
+                    csv_files.append(relative_path)
+
+        # Combine the lists
+        all_files = sas_files + csv_files
+
+        return render(request, self.template_name, {'sas_account': sas_account, 'all_files': all_files})
 
     def post(self, request, pk):
         # Get the SAS account for the given user (by primary key)
-        sas_account = get_object_or_404(SASAccount, pk = pk)
+        sas_account = get_object_or_404(SASAccount, pk=pk)
 
-        # Get the selected filename from the dropdown
-        filename = request.POST.get('filename')
-        file_path = os.path.join(BASE_DIR, "SAS", filename)  # Full path to the selected .sas file
+        # Get the selected filenames from the form (multi-select)
+        filenames = request.POST.getlist('filenames')  # Changed to getlist for multiple files
 
-        # Build the command to run the script via subprocess
+        # Build the command to run the script via subprocess for each selected file
         command = [
             'python', os.path.join(BASE_DIR, "Python", "interact_sas.py"),  # Full path to the Python script
-            sas_account.email,  # First argument: SAS email
-            filename,           # Second argument: Filename
-            file_path           # Third argument: Path to the .sas file
+            sas_account.email  # First argument: SAS email
         ]
+
+        # Append each selected file to the command
+        command.extend(filenames)
 
         try:
             # Run the command using subprocess
-            result = subprocess.run(command, capture_output = True, text = True)
+            result = subprocess.run(command, capture_output=True, text=True)
 
             # Check if the script was successful
             if result.returncode == 0:
                 return HttpResponse(f"SAS script executed successfully. Output: {result.stdout}")
             else:
-                return HttpResponse(f"An error occurred: {result.stderr}", status = 500)
+                return HttpResponse(f"An error occurred: {result.stderr}", status=500)
 
         except Exception as e:
-            return HttpResponse(f"Failed to run the SAS script: {str(e)}", status = 500)
+            return HttpResponse(f"Failed to run the SAS script: {str(e)}", status=500)
