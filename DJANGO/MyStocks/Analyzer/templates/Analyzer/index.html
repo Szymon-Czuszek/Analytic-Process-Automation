@@ -4,9 +4,19 @@
 <ul>
     <h2>Home Page</h2>
 
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}">
+                    {{ message }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
     {% if user.is_authenticated %}
-        <p> You are Logged In</p>
-        <p> Welcome: {{ user.get_username }}</p>
+        <p>You are Logged In</p>
+        <p>Welcome: {{ user.get_username }}</p>
         
         <!-- Logout form with POST method -->
         <form method="post" action="{% url 'logout' %}?next={{ request.path }}">
@@ -16,7 +26,7 @@
         
     {% else %}
 
-        <p> You are not logged in </p>
+        <p>You are not logged in</p>
         <ul>
             <li>
                 <a href="{% url 'login' %}?next={{ request.path }}">LOGIN</a>
@@ -29,5 +39,4 @@
     {% endif %}
 
 </ul>
-
 {% endblock %}
