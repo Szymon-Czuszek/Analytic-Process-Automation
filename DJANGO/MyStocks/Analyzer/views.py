@@ -2,11 +2,12 @@ from .forms import StockDataForm, SASAccountForm
 from .models import DataSet, SASAccount
 from datetime import datetime
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models.query import QuerySet
-from django.http import FileResponse, HttpResponseNotFound, HttpResponse
+from django.http import FileResponse, HttpResponseNotFound, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
@@ -183,6 +184,7 @@ class RunSASScriptView(View):
         # Build the command to run the script via subprocess for each selected file
         command = [
             'python', os.path.join(BASE_DIR, "Python", "interact_sas.py"),  # Full path to the Python script
+            "automatedsas",
             sas_account.email  # First argument: SAS email
         ]
 
@@ -191,13 +193,18 @@ class RunSASScriptView(View):
 
         try:
             # Run the command using subprocess
-            result = subprocess.run(command, capture_output=True, text=True)
+            result = subprocess.run(command, capture_output = True, text = True)
 
             # Check if the script was successful
             if result.returncode == 0:
-                return HttpResponse(f"SAS script executed successfully. Output: {result.stdout}")
+                 # Add a success message with the script output
+                messages.success(request, f"SAS script executed successfully. Output: {result.stdout}")
+                # Redirect to success page with a success message
+                return redirect("/")
             else:
-                return HttpResponse(f"An error occurred: {result.stderr}", status=500)
-
+                messages.error(request, f"An error occurred: {result.stderr}")
+                return redirect("/")
+            
         except Exception as e:
-            return HttpResponse(f"Failed to run the SAS script: {str(e)}", status=500)
+            messages.error(request, f"Failed to run the SAS script: {str(e)}")
+            return redirect("/")
