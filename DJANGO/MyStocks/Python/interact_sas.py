@@ -151,18 +151,6 @@ def run_sas_script(prefix, user_email, filenames):
         except Exception as e:
             print(f"None of the files exist, or 'Replace' button not found.")
 
-        format_button = WebDriverWait(driver, 60).until(
-            EC.visibility_of_element_located((By.XPATH, "//span[@aria-labelledby='perspectiveTabContainer_tabsBC_tab0_formatCodeBtn_label']"))
-        )
-        format_button.click()
-
-        time.sleep(delay)
-
-        run_button = WebDriverWait(driver, 60).until(
-            EC.visibility_of_element_located((By.XPATH, "//span[@aria-labelledby='perspectiveTabContainer_tabsBC_tab0_submitBtn_label']"))
-        )
-        run_button.click()
-
         elapsed_time = time.time() - start_time
         print(f"Script executed successfully in {elapsed_time:.2f} seconds.")
 
