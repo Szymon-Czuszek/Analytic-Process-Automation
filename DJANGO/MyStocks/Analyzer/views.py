@@ -18,6 +18,7 @@ import logging
 import os
 import yfinance as yf
 import subprocess
+import shutil
 
 logger = logging.getLogger(__name__)
 BASE_DIR = settings.BASE_DIR # Access BASE_DIR from settings
@@ -181,10 +182,12 @@ class RunSASScriptView(View):
         # Get the selected filenames from the form (multi-select)
         filenames = request.POST.getlist('filenames')  # Changed to getlist for multiple files
 
+        prefix = "automatedsas"
+
         # Build the command to run the script via subprocess for each selected file
         command = [
             'python', os.path.join(BASE_DIR, "Python", "interact_sas.py"),  # Full path to the Python script
-            "automatedsas",
+            prefix,
             sas_account.email  # First argument: SAS email
         ]
 
@@ -192,6 +195,26 @@ class RunSASScriptView(View):
         command.extend(filenames)
 
         try:
+            # List to store the prefixed filenames for cleanup
+            prefixed_files = []
+
+            # Loop over each file and create a copy with a prefixed name
+            for filename in filenames:
+                # Determine the folder based on the file extension
+                folder = "SAS" if filename.endswith(".sas") else "DataSets"
+                # Full original path
+                original_file = os.path.join(BASE_DIR, folder, filename)
+                
+                # Add the prefix and create a new filename
+                prefixed_filename = f"{prefix}-{filename}"
+                prefixed_file = os.path.join(BASE_DIR, folder, prefixed_filename)
+                
+                # Copy the original file to the new prefixed file
+                shutil.copy(original_file, prefixed_file)
+                
+                # Store the prefixed file path for later deletion
+                prefixed_files.append(prefixed_file)
+
             # Run the command using subprocess
             result = subprocess.run(command, capture_output = True, text = True)
 
@@ -208,3 +231,9 @@ class RunSASScriptView(View):
         except Exception as e:
             messages.error(request, f"Failed to run the SAS script: {str(e)}")
             return redirect("/")
+        
+        finally:
+            # Delete the prefixed files
+            for prefixed_file in prefixed_files:
+                if os.path.exists(prefixed_file):
+                    os.remove(prefixed_file)
