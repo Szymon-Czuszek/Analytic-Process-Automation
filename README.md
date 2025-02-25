@@ -1,4 +1,4 @@
-Analytic Process Automation with Python & SAS
+# 📊 Analytic Process Automation with Python & SAS
 
 Overview
 This project combines Django, Python automation, and SAS analytics to streamline and automate stock data analysis. It integrates web-based interfaces, robotic process automation, and statistical modeling to enhance efficiency and decision-making.
