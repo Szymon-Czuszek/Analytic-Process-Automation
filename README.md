@@ -20,3 +20,10 @@ This project integrates Django, Python automation, and SAS analytics to streamli
 ### 📈 SAS Analytics
 - SAS scripts for stock market analysis, leveraging advanced statistical models
 - Data visualization for insights into stock behavior and trends
+
+## 🛠️ Tech Stack
+Backend: Django (Python)
+Automation: Selenium, PyAutoGUI, OS libraries
+Analytics & Data Science: SAS, Pandas, NumPy, Statsmodels
+Database: PostgreSQL / SQLite (configurable)
+Frontend: Bootstrap, HTML, CSS
