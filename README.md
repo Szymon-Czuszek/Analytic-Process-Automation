@@ -17,5 +17,6 @@ This project integrates Django, Python automation, and SAS analytics to streamli
 - Stock data retrieval & integration from multiple sources
 - Task automation to minimize manual intervention in stock analysis workflows
 
-SAS Analytics:
-SAS scripts for stock market analysis
+### 📈 SAS Analytics
+- SAS scripts for stock market analysis, leveraging advanced statistical models
+- Data visualization for insights into stock behavior and trends
