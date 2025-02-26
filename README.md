@@ -27,3 +27,9 @@ This project integrates Django, Python automation, and SAS analytics to streamli
 - Analytics & Data Science: SAS, Pandas, NumPy, Statsmodels
 - Database: PostgreSQL / SQLite (configurable)
 - Frontend: Bootstrap, HTML, CSS
+
+## 🔍 Usage
+Manage stock datasets through the web-based interface
+Run SAS analytics directly from Django views
+Automate stock data retrieval and analysis
+Generate statistical insights into stock market trends
