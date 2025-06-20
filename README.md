@@ -15,7 +15,7 @@ This project integrates Django, Python automation, and SAS analytics to streamli
 - 📌 Automated interactions using Selenium, PyAutoGUI, and other automation libraries
 - 📌 Execution of SAS scripts directly from the Django application
 - 📌 Stock data retrieval & integration from multiple sources
-- Task automation to minimize manual intervention in stock analysis workflows
+- 📌 Task automation to minimize manual intervention in stock analysis workflows
 
 ### 📈 SAS Analytics
 - SAS scripts for stock market analysis, leveraging advanced statistical models
