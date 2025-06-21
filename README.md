@@ -23,7 +23,7 @@ This project integrates Django, Python automation, and SAS analytics to streamli
 
 ## 🛠️ Tech Stack
 - 📌 Backend: Django (Python)
-- Automation: Selenium, PyAutoGUI, OS libraries
+- 📌 Automation: Selenium, PyAutoGUI, OS libraries
 - Analytics & Data Science: SAS, Pandas, NumPy, Statsmodels
 - Database: PostgreSQL / SQLite (configurable)
 - Frontend: Bootstrap, HTML, CSS
