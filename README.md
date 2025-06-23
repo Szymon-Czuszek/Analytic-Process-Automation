@@ -31,5 +31,5 @@ This project integrates Django, Python automation, and SAS analytics to streamli
 ## 🔍 Usage
 - 📌 Manage stock datasets through the web-based interface
 - 📌 Run SAS analytics directly from Django views
-- Automate stock data retrieval and analysis
+- 📌 Automate stock data retrieval and analysis
 - Generate statistical insights into stock market trends
